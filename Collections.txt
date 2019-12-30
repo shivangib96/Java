@@ -1,0 +1,283 @@
+package day_6;
+
+public class Account {
+	private int accno;
+	private String custname;
+	private double balance;
+	public Account() {
+	super();
+	
+	}
+	public Account(int accno, String custname, double balance) {
+	super();
+	this.accno = accno;
+	this.custname = custname;
+	this.balance = balance;
+	}
+	public int getAccno() {
+	return accno;
+	}
+	public void setAccno(int accno) {
+	this.accno = accno;
+	}
+	public String getCustname() {
+	return custname;
+	}
+	public void setCustname(String custname) {
+	this.custname = custname;
+	}
+	public double getBalance() {
+	return balance;
+	}
+	public void setBalance(double balance) {
+	this.balance = balance;
+	}
+	}
+
+
+
+
+
+package day_6;
+
+public class AccountOperations {
+	Account[] accounts = new Account[5];
+	public AccountOperations() {
+		accounts[0]=new Account(10011, "deloitte", 8000);
+		accounts[1]=new Account(20111,"Microsoft",1000);
+		accounts[2]=new Account(76011,"Wipro",7000);
+		accounts[3]=new Account(80111,"ZS",5000);
+		accounts[4]=new Account(60761,"TCS",2000);
+		
+	}
+	void deposit(int acno,double amount){
+		for(int i=0;i<5;i++){
+		if(accounts[i].getAccno()==acno){
+		System.out.println("Present Balance = "+(accounts[i].getBalance()));
+		System.out.println("Deposited Amount= "+amount);
+		double newBalance=(accounts[i].getBalance()+amount);
+		accounts[i].setBalance(newBalance);
+		System.out.println("Updated Balance= "+(accounts[i].getBalance()));
+		}
+		else if(i==6)
+		System.out.println("INVALID ACCOUNT NUMBER");
+		}
+
+		}
+		void withdraw(int acno,double amount){
+		for(int i=0;i<5;i++){
+		if(accounts[i].getAccno()==acno){
+		System.out.println("Present Balance = "+(accounts[i].getBalance()));
+		System.out.println("Withdrawn Amount= "+amount);
+		double newBalance=(accounts[i].getBalance()-amount);
+		accounts[i].setBalance(newBalance);
+		System.out.println("Updated Balance= "+(accounts[i].getBalance()));
+		}
+		else if(i==6)
+		System.out.println("INVALID ACCOUNT NUMBER");
+		}
+
+		}
+
+
+		void checkBalance(int acno){
+		int j=0;
+		for(int i=0;i<5;i++){
+		if(accounts[i].getAccno()==acno){
+		System.out.println("Present Balance = "+(accounts[i].getBalance()));
+		j=1;
+		}
+
+		}
+		try{
+		if(j==0)
+		throw new AccountNotFoundException();
+		}
+		catch(AccountNotFoundException e){
+		//e.printStackTrace();
+		System.out.println(e.getMessage());
+
+		}
+
+
+		}
+		}
+
+
+package day_6;
+import java.util.*;
+public class AccountApplication {
+	public static void main(String[] args) {
+		Scanner sc= new Scanner(System.in);
+		System.out.println("Enter Account Number: ");
+		   int acno=sc.nextInt();
+		   AccountOperations operation = new AccountOperations();
+		System.out.println("Enter the value      1.Check Balance     2.Deposit Cash     3.Withdraw Cash");
+		int n=sc.nextInt();
+		switch(n){
+		case 1: operation.checkBalance(acno);
+		break;
+		case 2: System.out.println("Enter Amount to be deposited: ");
+		           int depositValue=sc.nextInt();
+		           operation.deposit(acno,depositValue);
+		break;
+		case 3:System.out.println("Enter Amount to be withdrawed: ");
+		               int withdrawAmount=sc.nextInt();
+		               operation.withdraw(acno,withdrawAmount);
+		break;
+		default: System.out.println("Invalid Operation.");
+		}
+
+		}
+
+		}
+
+
+
+package day_6;
+
+public class AccountNotFoundException extends Exception {
+
+	public AccountNotFoundException() {
+		super("INVALID ACCOUNT NUMBER");
+		}
+
+
+		}
+
+
+
+
+
+package day_6;
+
+import java.util.TreeSet;
+
+public class TreeSetExample {
+
+	public static void main(String[] args) {
+TreeSet<String> items=new TreeSet<>();
+items.add("xyz");
+items.add("java");
+items.add("abcd");
+items.add("spring");
+items.add("deloitte");
+items.add("oracle");
+System.out.println(items);
+	}
+
+}
+
+
+
+
+package day_6;
+
+public interface Vehicle {
+	
+	public void wheels();
+	public void engines();
+
+}
+
+
+
+package day_6;
+
+public class Bus implements Vehicle {
+
+	public static void main(String[] args) {
+		Bus bus=new Bus();
+		bus.wheels();
+		bus.engines();
+
+	}
+
+	@Override
+	public void wheels() {
+		System.out.println("4 wheels");
+		
+	}
+
+	@Override
+	public void engines() {
+		System.out.println("1 engine");
+		
+	}
+
+}
+
+
+package day_6;
+
+public class Aeroplane implements Vehicle {
+
+	public static void main(String[] args) {
+		Aeroplane aeroplane=new Aeroplane();
+		aeroplane.wheels();
+		aeroplane.engines();
+
+	}
+
+	@Override
+	public void wheels() {
+		System.out.println("6 wheels");
+		
+	}
+
+	@Override
+	public void engines() {
+		System.out.println("1 engine");
+		
+	}
+
+}
+
+
+
+package day_6;
+import java.util.ArrayList;
+import java.util.Scanner;
+import java.util.Iterator;
+public class SampleArrayList {
+
+	public static void main(String[] args) {
+		ArrayList list=new ArrayList();
+		list.add(567);
+		list.add(34.56);
+		list.add("deloitte");
+		list.add(567);
+		list.add(null);
+		System.out.println(list+" "+list.size());
+		list.add(2,"java");
+		System.out.println(list+" "+list.size());
+		list.remove(new Integer(567));
+		System.out.println(list+" "+list.size());
+		Iterator itr=list.listIterator();
+		//Scanner scanner = new Scanner(System.in);
+		while(itr.hasNext()) {
+			Object obj=itr.next();
+			if(obj instanceof Integer)
+		System.out.println(obj);
+		}
+	}
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
