@@ -1,0 +1,79 @@
+package deloitte_m;
+
+abstract class Shape {
+	protected double length;
+	protected double breadth;
+	protected double radius;
+	
+	public Shape(double length,double breadth)
+	{
+		this.length=length;
+		this.breadth=breadth;
+	}
+	public Shape(double radius)
+	{
+		this.radius=radius;
+	}
+	public abstract void area();
+	
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+	}
+
+}
+
+
+
+
+package deloitte_m;
+
+public class Rectangle extends Shape {
+	public Rectangle(double length,double breadth)
+	{
+		
+		super(length,breadth);
+	}
+	
+	@Override
+	public void area() {
+		double rectangleArea;
+		rectangleArea= length*breadth;
+		System.out.println("Area of Rectangle :"+rectangleArea);
+	}
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		
+		double rectangleLength;
+		double rectangleBreadth;
+		double circleRadius;
+		rectangleLength=Double.parseDouble(args[0]);
+		rectangleBreadth=Double.parseDouble(args[1]);
+		circleRadius=Double.parseDouble(args[2]);
+		Shape rectangle=new Rectangle(rectangleLength,rectangleBreadth);
+		Shape circle=new Circle(circleRadius);
+		rectangle.area();
+		circle.area();
+	}
+		
+	}
+
+
+
+
+
+
+ package deloitte_m;
+
+ public class Circle extends Shape {
+     public Circle(double radius)
+     {
+    super(radius);
+     }
+     @Override
+     public void area()
+   {
+    double circleArea=Math.PI*radius*radius;
+    System.out.println("Area of Circle: "+circleArea);
+   }
+}
