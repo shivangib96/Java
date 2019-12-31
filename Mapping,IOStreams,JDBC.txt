@@ -1,0 +1,272 @@
+package deloitte_m;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+public class DateExample {
+
+	public static void main(String[] args) throws ParseException {
+		String dob="31-12-2019";
+		Date dt=new Date();
+		System.out.println(dt);
+		SimpleDateFormat sdf=new SimpleDateFormat("dd-MM-yyyy");
+		dt=sdf.parse(dob);
+		System.out.println(dt+" "+sdf.format(dt));
+
+	}
+
+}
+
+
+
+package deloitte_m;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Set;
+
+public class HashMapExample {
+
+	public static void main(String[] args) {
+HashMap<String,Integer> phonebook=new HashMap<>();
+phonebook.put("nexwave", 12345);
+phonebook.put("deloitte", 98765);
+phonebook.put("deloitte", 12345);
+System.out.println(phonebook);
+System.out.println(phonebook.get("nexwave"));
+Set set=phonebook.entrySet();
+Iterator itr=set.iterator();
+while(itr.hasNext());
+System.out.println(itr.next());
+
+	}
+
+}
+
+
+
+package deloitte_m;
+import java.util.*;
+public class StringTokenExample {
+
+	public static void main(String[] args) {
+		 System.out.println("Using Constructor 1 - "); 
+	        StringTokenizer st1 = 
+	             new StringTokenizer("Hello Geeks How are you", " "); 
+	        while (st1.hasMoreTokens()) 
+	            System.out.println(st1.nextToken()); 
+	  
+	        System.out.println("Using Constructor 2 - "); 
+	        StringTokenizer st2 =  
+	             new StringTokenizer("JAVA : Code : String", " :"); 
+	        while (st2.hasMoreTokens()) 
+	            System.out.println(st2.nextToken()); 
+	  
+	        System.out.println("Using Constructor 3 - "); 
+	        StringTokenizer st3 =  
+	             new StringTokenizer("JAVA : Code : String", " :",  true); 
+	        while (st3.hasMoreTokens()) 
+	            System.out.println(st3.nextToken()); 
+
+	}
+
+}
+
+
+
+package deloitte_m;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+public class FileWriting {
+	public static void main(String[] args) {
+File file=new File("D:\\sample");
+file.mkdir();
+try {
+	FileOutputStream fos=new FileOutputStream("D:\\sample\\resume");
+	for(int i=65;i<91;i++)
+		fos.write(i);
+	fos.close();
+	System.out.println("Success");
+}
+catch(IOException e) {
+	e.printStackTrace();
+}
+	}
+
+}
+
+
+
+
+
+package deloitte_m;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+public class FileReading {
+
+	public static void main(String[] args) {
+		try{
+			FileInputStream fis=new FileInputStream("D:\\sample\\resume");
+			int x;
+			while((x=fis.read())!=-1)
+				System.out.println((char)x);
+			fis.close();
+			
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+}
+
+
+
+
+
+
+package deloitte_m;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+public class FileCopy   {
+
+	public static void main(String[] args) throws IOException 
+	{
+		File file=new File("D:\\Copied");
+		file.mkdir();
+		FileInputStream fis = new FileInputStream("D:\\sample\\resume"); 
+		 FileOutputStream fos = new FileOutputStream("D:\\Copied\\contents"); 
+		 int b; 
+	        while  ((b=fis.read()) != -1) 
+	            fos.write(b); 
+	        fis.close(); 
+	        fos.close(); 
+	    } 
+	
+}
+	
+
+
+
+
+
+
+package deloitte_m;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.*;
+import oracle.jdbc.driver.OracleDriver;
+public class TestDB {
+
+public static void main(String[] args) throws SQLException {
+OracleDriver driver=new OracleDriver();
+DriverManager.registerDriver(driver);
+String url="jdbc:oracle:thin:@localhost:1521:orcl1";
+Connection conn=DriverManager.getConnection(url, "scott", "tiger");
+System.out.println("Connected");
+Scanner sc=new Scanner(System.in);
+for(int i=0;i<3;i++)
+{
+int input1=sc.nextInt();
+String input2=sc.next();
+int salary=sc.nextInt();
+String qry="insert into employee values(?,?,?)";
+PreparedStatement pst=conn.prepareStatement(qry);
+pst.setInt(1,input1);
+pst.setString(2, input2);
+pst.setDouble(3, salary);
+int rows=pst.executeUpdate();
+System.out.println("inserted "+rows);
+}
+conn.close();
+	}
+
+}
+
+
+
+
+package deloitte_m;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import oracle.jdbc.driver.OracleDriver;
+public class TestDB {
+
+public static void main(String[] args) throws SQLException {
+OracleDriver driver=new OracleDriver();
+DriverManager.registerDriver(driver);
+String url="jdbc:oracle:thin:@localhost:1521:orcl1";
+Connection conn=DriverManager.getConnection(url, "scott", "tiger");
+System.out.println("Connected");
+
+String qry="update employee set empno=?,name=?where salary=?";
+PreparedStatement pst=conn.prepareStatement(qry);
+pst.setInt(1,12);
+
+pst.setString(2, "nexwave");
+pst.setInt(3, 200000);
+int rows=pst.executeUpdate();
+System.out.println(+rows);
+
+conn.close();
+	}
+
+}
+
+
+
+
+
+package deloitte_m;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import oracle.jdbc.driver.OracleDriver;
+
+public class TestDB {
+
+	public static void main(String[] args) throws SQLException {
+	OracleDriver driver=new OracleDriver();
+	DriverManager.registerDriver(driver);
+	String url="jdbc:oracle:thin:@localhost:1521:orcl";
+	Connection conn=DriverManager.getConnection(url,"scott","tiger");
+	DriverManager.getConnection(url,"scott","tiger");
+
+	System.out.println("Connected");
+	String qry="select * from employee";
+	PreparedStatement pst=conn.prepareStatement(qry);
+	ResultSet rs=pst.executeQuery();
+	ResultSetMetaData rsmd=rs.getMetaData();
+	for(int i=1;i<=rsmd.getColumnCount();i++)
+	System.out.print(rsmd.getColumnName(i)+" ");
+	System.out.println("\n------------------------");
+	while(rs.next())
+	System.out.println(rs.getInt(1)+" "+rs.getString("name")+" "+rs.getDouble("salary"));
+
+	}
+
+	}
+
+
+
+
+
+
+
