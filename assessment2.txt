@@ -1,0 +1,331 @@
+package com.test.dept.dao.impl;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.test.dept.beans.Dept;
+import com.test.dept.daao.DeptDao;
+import oracle.jdbc.OracleDriver;
+
+import com.test.dept.utils.ConvertDate;
+import com.test.dept.utils.DeptUtils;
+
+public class DeptDaoImplassessment2 implements DeptDao{
+	private Connection conn=null;
+	private PreparedStatement pst;
+	private ResultSet rs;
+
+	public void openConnection() {
+		// TODO Auto-generated method stub
+		try {
+			DriverManager.registerDriver(new OracleDriver());
+			String url ="jdbc:oracle:thin:@localhost:1521:orcl";
+			String user = "scott";
+			String pass = "tiger";
+			conn = DriverManager.getConnection(url, user, pass);
+		} catch (SQLException e) {
+		e.printStackTrace();
+		}
+	}
+
+	public void close() {
+		// TODO Auto-generated method stub
+		try {
+			conn.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public int addDept(Dept dept) {
+		// TODO Auto-generated method stub
+		openConnection();
+		int rows=0;
+		try {
+			pst = conn.prepareStatement(DeptUtils.insertqry);
+			pst.setInt(1, dept.getDeptno());
+			pst.setString(2, dept.getDname());
+			pst.setString(3, dept.getLoc());
+			rows= pst.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		finally{
+			close();
+		}
+		return rows;
+	}
+}
+
+
+
+package com.test.dept.daao;
+
+import java.util.List;
+
+import com.test.dept.beans.Dept;
+
+public interface DeptDao{
+	void openConnection();
+	void close();
+	int addDept(Dept dept); 
+	
+	int deleteDept(int depno);
+	List<Dept> getDepts();
+	
+
+}
+
+
+
+
+
+package com.test.dept.beans;
+
+public class Dept {
+	private int deptno;
+	private String dname;
+	private String loc;
+
+	public Dept() {
+	}
+	public Dept(int deptno, String dname, String loc) {
+		this.deptno = deptno;
+		this.dname = dname;
+		this.loc = loc;
+		
+	}
+	public int getDeptno() {
+		return deptno;
+	}
+	public void setDeptno(int deptno) {
+		this.deptno = deptno;
+	}
+	public String getDname() {
+		return dname;
+	}
+	public void setDname(String dname) {
+		this.dname = dname;
+	}
+	public String getLoc() {
+		return loc;
+	}
+	public void setLoc(String loc) {
+		this.loc = loc;
+	}
+	
+	
+}
+
+
+
+
+package com.test.dept.utils;
+
+public class DeptUtils {
+
+	public static String insertqry="insert into dept values(?,?,?)";
+	public static String deleteqry="delete from dept where deptno=?";
+	public static String updateqry="update dept set(?,?,?) where= ?";
+	public static final String GETDEPTS = "select * from dept";
+}
+
+
+
+
+package web;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+
+
+import com.test.dept.daao.DeptDao;
+import com.test.dept.beans.Dept;
+import com.test.dept.dao.impl.DeptDaoImpl;
+
+/**
+ * Servlet implementation class DeptDetails
+ */
+@WebServlet("/DeptDetails")
+public class DeptDetails extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		PrintWriter out = response.getWriter();
+		int deptno = Integer.parseInt(request.getParameter("deptno"));
+		String dname = request.getParameter("dname");
+		String loc = request.getParameter("loc");
+		
+		
+		Dept dept = new Dept(deptno,dname,loc);
+		DeptDao dao =new DeptDaoImpl();
+		int rows= dao.addDept(dept);
+		out.println(rows+" row Inserted");
+
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		doGet(request, response);
+	}
+
+}
+
+
+
+package web;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.test.dept.daao.DeptDao;
+import com.sun.xml.internal.bind.v2.schemagen.xmlschema.List;
+import com.test.dept.beans.Dept;
+import com.test.dept.dao.impl.DeptDaoImpl;
+
+/**
+ * Servlet implementation class GetDepts
+ */
+@WebServlet("/GetDepts")
+public class GetDept extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		PrintWriter out = response.getWriter();
+		ServletContext ctx = getServletContext();
+		out.println("City = "+ctx.getInitParameter("city")+"<br>"); 
+		ServletConfig config = getServletConfig();
+		out.println("mobile = "+config.getInitParameter("mobile")+"<br>"); 
+		DeptDaoImpl dao = new DeptDaoImpl();
+		List<Dept> deptlist = dao.getDepts();
+		out.println("<table border=7>");
+		out.println("<tr><th>DEPTNO<TH>DNAME<TH>JOB<TH>MANAGER CODE<TH>HIREDATE<TH>SALARY<TH>COMMISSION<TH>DEPTNO</tr>");
+		for(Dept e : deptlist){
+			out.println("<tr>");
+			out.println("<td>"+e.getDeptno()+"</td>");
+			out.println("<td>"+e.getDname()+"</td>");
+			out.println("<td>"+e.getLoc()+"</td>");
+		
+		}
+		out.println("</table>");
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		doGet(request, response);
+	}
+
+}
+
+
+
+
+package web;
+
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ * Servlet implementation class DeleteDept
+ */
+@WebServlet("/DeleteDept")
+public class DeleteDept extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		response.getWriter().append("Served at: ").append(request.getContextPath());
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		doGet(request, response);
+	}
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<form action="DeptDetails"></form>
+DeptNo=<input type="text" name="deptno" ><br>
+DeptName=<input type="text" name="deptname"><br>
+Location=<input type="text" name="location"><br>
+<input type="submit">
+</form>
+</body>
+</html>
